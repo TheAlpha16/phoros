@@ -13,3 +13,7 @@ func (s *S3FS) Authenticate() error {
 func (s *S3FS) GetFile(c *fiber.Ctx, file string) error {
 	return nil
 }
+
+func (s *S3FS) UploadFile(c *fiber.Ctx) error {
+	return nil
+}

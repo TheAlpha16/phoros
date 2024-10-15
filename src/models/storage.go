@@ -7,4 +7,5 @@ import (
 type Storage interface {
 	Authenticate() error
 	GetFile(c *fiber.Ctx, file string) error
+	UploadFile(c *fiber.Ctx) error
 }
