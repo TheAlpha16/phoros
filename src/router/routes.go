@@ -10,6 +10,9 @@ import (
 func SetupRoutes(app *fiber.App) {
 	app.Get("/ping", handler.Ping)
 
+	admin := app.Group("/admin", middleware.AdminToken())
+	admin.Post("/upload", handler.UploadFile)
+
 	files := app.Group("/files", middleware.CheckTime(), middleware.CheckToken())
 	files.Get("/:file", handler.GetFile)
 }
