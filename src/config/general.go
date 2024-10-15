@@ -12,6 +12,7 @@ var EVENT_START = os.Getenv("EVENT_START")
 var EVENT_END = os.Getenv("EVENT_END")
 var POST_EVENT = os.Getenv("POST_EVENT")
 var OBJECT_STORE = os.Getenv("OBJECT_STORE") // s3 or native
+var ADMIN_SECRET = os.Getenv("ADMIN_SECRET")
 
 var NFS_PATH = "/etc/phoros" // don't change unless you know what you're doing
 
