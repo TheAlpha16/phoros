@@ -2,7 +2,7 @@
 
 set +x
 
-cd ../..
+cd $(dirname "$0")/../..
 
 image="phoros-test"
 container="phoros-test"

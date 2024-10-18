@@ -20,12 +20,14 @@ echo -n "> "
 read tag
 echo ""
 
-docker buildx build --tag ${registry}/${resource}:${version} --platform linux/arm64/v8,linux/amd64 --push .
+cd $(dirname "$0")/../..
+
+docker build --tag ${registry}/${resource}:${version} --push .
 
 case $tag in
     "1")
         docker rmi -f ${registry}/${resource}:latest
-        docker buildx build --tag ${registry}/${resource}:latest --platform linux/arm64/v8,linux/amd64 --push .
+        docker build --tag ${registry}/${resource}:latest --push .
     ;;
     "2")
         echo "[*] Not removing latest tag"

@@ -8,4 +8,4 @@ curl http://127.0.0.1:${port}/admin/upload \
     --silent \
     -H "Authorization: Bearer $token" \
     -H "Content-Type: multipart/form-data" \
-    -F "file=@files/welcome.txt" 
+    -F "file=@$(dirname "$0")/files/welcome.txt" 
