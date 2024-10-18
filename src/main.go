@@ -16,7 +16,7 @@ func main() {
 	// Initialize error logging
 	logs.InitLogger()
 
-	log.Println("phoros v0.0.1")
+	log.Println("phoros v1.0.0")
 
 	// Authenticate to file storage
 	if err := storage.InitStorage(); err != nil {
