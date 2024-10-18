@@ -1,0 +1,64 @@
+# Default values for phoros.
+
+# If you want to use phoros 
+# in a bigger event with timings set, 
+# you can assign the unix timestamps in seconds
+
+
+replicaCount: 1
+namespace: phoros
+
+event:
+  startTime: # 1729191091
+  endTime: # 1729291091
+  postEvent: false # determines whether files should be served after end time 
+
+storage:
+  storageClass: do-block-storage # check with your cloud provide for available classes
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  objectStore: native # native | s3
+  mountPath: /etc/phoros
+
+# PLEASE PLEASE CHANGE THESE SECRETS
+secrets:
+  sessionSecret: heckingisfun
+  adminSecret: heckingisfun
+
+image:
+  # this is latest prebuilt image, build one yourself if you want some changes
+  repository: docker.io/thealpha16/phoros
+  pullPolicy: Always
+  tag: latest
+
+service:
+  type: ClusterIP
+  containerPort: 9049
+  servicePort: 80
+
+resources: 
+  limits:
+    cpu: 300m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+ingress:
+  enabled: true
+  replicas: 1
+  type: LoadBalancer
+  host: "example.com" # if you don't want host to be matched, set this to empty string
+  paths: 
+    - /files
+    - /ping
+    # - /admin # you can expose uplaod admin functions to the public by uncommenting this
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+podLabels: {}

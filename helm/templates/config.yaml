@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: phoros-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "phoros.labels" . | nindent 4 }}
+data:
+  session_secret: {{ .Values.secrets.sessionSecret }}
+  admin_secret: {{ .Values.secrets.adminSecret }}
+  event_start: {{ .Values.event.startTime | quote }}
+  event_end: {{ .Values.event.endTime | quote }}
+  post_event: {{ .Values.event.postEvent | quote }}
+  object_store: {{ .Values.storage.objectStore }}
+  app_port: {{ .Values.service.containerPort | quote }}

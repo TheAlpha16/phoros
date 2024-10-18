@@ -1,0 +1,17 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: phoros-ingress-route
+  namespace: {{ .Values.namespace }}
+spec:
+  entryPoints:                     
+    - web
+  routes:                          
+  - kind: Rule
+    match: "PathPrefix({{- range .Values.ingress.paths }}`{{ . }}`,{{- end }}) {{- if .Values.ingress.host}} && Host(`{{ .Values.ingress.host }}`) {{- end}}"
+    services:                      
+    - kind: Service
+      name: phoros-svc
+      namespace: {{ .Values.namespace }}
+      passHostHeader: true
+      port: 80                     

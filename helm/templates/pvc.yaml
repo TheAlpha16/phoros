@@ -1,0 +1,15 @@
+{{- if eq .Values.storage.objectStore "native" -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: phoros-storage-pvc
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "phoros.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.storage.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.storage.size }}
+{{- end -}}

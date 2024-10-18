@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phoros-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "phoros.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "phoros.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "phoros.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: phoros-service-account 
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SESSION_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: phoros-config
+                  key: session_secret
+            - name: ADMIN_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: phoros-config
+                  key: admin_secret
+            - name: EVENT_START
+              valueFrom:
+                configMapKeyRef:
+                  name: phoros-config
+                  key: event_start
+            - name: EVENT_END
+              valueFrom:
+                configMapKeyRef:
+                  name: phoros-config
+                  key: event_end
+            - name: POST_EVENT
+              valueFrom:
+                configMapKeyRef:
+                  name: phoros-config
+                  key: post_event
+            - name: OBJECT_STORE
+              valueFrom:
+                configMapKeyRef:
+                  name: phoros-config
+                  key: object_store
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: phoros-config
+                  key: app_port
+          ports:
+            - name: phoros-app-port
+              containerPort: {{ .Values.service.containerPort }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: phoros-app-port
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if eq .Values.storage.objectStore "native" }}
+          volumeMounts:
+            - name: phoros-storage
+              mountPath: {{ .Values.storage.mountPath }}
+          {{- end }}
+      {{- if eq .Values.storage.objectStore "native" }}
+      volumes:
+        - name: phoros-storage
+          persistentVolumeClaim:
+            claimName: phoros-storage-pvc
+      {{- end}}
