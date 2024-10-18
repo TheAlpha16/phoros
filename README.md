@@ -127,4 +127,3 @@ Feel free to contribute to phoros by opening issues or submitting pull requests.
 ## License
 
 This project is licensed under the GNU General Public License.
-```
