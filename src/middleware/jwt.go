@@ -21,12 +21,12 @@ func CheckTime() fiber.Handler {
 		var err error
 
 		startTime, err = strconv.ParseInt(config.EVENT_START, 10, 64) 
-		if err == nil {
+		if err != nil {
 			return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"status": "failure", "message": "invalid event start time"})
 		}
 
 		endTime, err = strconv.ParseInt(config.EVENT_END, 10, 64) 
-		if err == nil {
+		if err != nil {
 			return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"status": "failure", "message": "invalid event end time"})
 		}
 
