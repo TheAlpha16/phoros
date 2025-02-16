@@ -42,7 +42,7 @@ func (n *NativeFS) UploadFile(c *fiber.Ctx) error {
 	filePath := fmt.Sprintf("%s/%s", config.NFS_PATH, sanitizedName)
 
 	if utils.FileExists(filePath) {
-		return c.Status(fiber.StatusConflict).SendString(fmt.Sprintf("/files/%s", sanitizedName))
+		utils.DeleteFile(filePath)
 	}
 
 	if err := c.SaveFile(file, filePath); err != nil {
