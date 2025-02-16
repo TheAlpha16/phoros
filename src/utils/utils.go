@@ -38,3 +38,12 @@ func FileExists(filename string) bool {
 
 	return true
 }
+
+func DeleteFile(filename string) error {
+	err := os.Remove(filename)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
