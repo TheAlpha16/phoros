@@ -64,8 +64,12 @@ func AdminToken() fiber.Handler {
 			Key:    []byte(config.ADMIN_SECRET),
 			JWTAlg: jwtware.HS256,
 		},
+		TokenLookup: "cookie:token",
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return c.SendStatus(fiber.StatusNotFound)
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"status":  "failure",
+				"message": "invalid or expired session token",
+			})
 		},
 	})
 }
