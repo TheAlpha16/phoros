@@ -8,11 +8,19 @@ import (
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func CheckTime() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		if config.EVENT_START == "" || config.EVENT_END == "" {
+			return c.Next()
+		}
+
+		claims := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)
+		rank := int(claims["rank"].(float64))
+
+		if rank == 1 {
 			return c.Next()
 		}
 

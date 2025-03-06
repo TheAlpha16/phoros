@@ -13,6 +13,6 @@ func SetupRoutes(app *fiber.App) {
 	admin := app.Group("/admin", middleware.AdminToken())
 	admin.Post("/upload", handler.UploadFile)
 
-	files := app.Group("/files", middleware.CheckTime(), middleware.CheckToken())
+	files := app.Group("/files", middleware.CheckToken(), middleware.CheckTime())
 	files.Get("/:file", handler.GetFile)
 }
